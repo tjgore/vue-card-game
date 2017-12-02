@@ -64,14 +64,19 @@ export default{
 				attempts: 0,
 				matches:0,
 				win:false,
-				points:0				
+				points:0,
+				fliptime:""				
 			}
 		},
 
 		methods:{
 			flip(obj,index){
+
 				if(this.match.length==this.levelMatch){
-					return;
+					this.check();
+					this.match.splice(0,2);
+					clearTimeout(this.fliptime);
+					
 				}
 				
 				obj={id:obj.id, icon:obj.icon, action:true};
@@ -82,7 +87,8 @@ export default{
 				this.match.push(obj);
 
 				if(this.match.length==this.levelMatch){
-					setTimeout( this.check,1200);
+					 this.fliptime = setTimeout( this.check,1200);
+					 //console.log(this.fliptime);
 				}
 
 
@@ -137,6 +143,7 @@ export default{
 					for(var i=0;i<this.allCards.length;i++){
 						this.$set(this.allCards, i, {id:opt[i].id, icon:opt[i].icon, action:false});
 					}
+					this.save();
 				}
 				this.matches=0;
 				this.attempts=0;
@@ -150,9 +157,11 @@ export default{
 					random = Math.floor(Math.random() * length+1);
 
 					temp = this.allCards[length];
+					console.log(random+" "+this.allCards[length]+" "+length);
 					this.allCards[length] = this.allCards[random];
 					this.allCards[random] = temp;
 					this.allCards[length].action = false;
+					
 					length--;
 
 				}
@@ -167,10 +176,25 @@ export default{
 					}
 				}
 				this.shuffle();
+			},
+			save(){
+				localStorage.setItem("cardlevel",this.difficulty);
+				localStorage.setItem("cardsCount", this.cardsCount);
+				localStorage.setItem("points", this.points);
+			}, 
+			reloadGame(){
+				if(localStorage.getItem("points")!=null){
+				this.points = parseInt(localStorage.getItem("points"));
+				this.cardsCount = parseInt(localStorage.getItem("cardsCount"));
+				this.difficulty = parseInt(localStorage.getItem("cardlevel"));
+			}
 			}
 			
 		},
 		created(){
+
+			this.reloadGame();
+			
 			for(var matchcount=0;matchcount<this.levelMatch;matchcount++){
 				for (var key=0; key<this.cardsCount; key++){
 				this.allCards.push(this.cardsInfo[key]);
