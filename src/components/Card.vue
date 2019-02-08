@@ -1,26 +1,44 @@
 <template>
 <div class="col-xs-12 text-center cards-container">
-<h2>Level {{ difficulty }}</h2>
-<p v-for="(cards,index) in allCards" class="card text-center" :class="{cardplay:cards.action}" @click="flip(cards,index)"><i class="fa fa-3x icon"  :class="cards.icon"></i></p>
-<div class="col-xs-12 btn-container">
-<button class="btn btn-primary btn-lg" @click="reshuffle('reset')">Restart</button>
+ <div class="col-xs-8">
+  <h3 class="text-left" style="margin-bottom:0px;"><strong>Memory Game</strong></h3>
+  </div>
+  <div class="col-xs-4">
+<h4 style="margin-top:22px;margin-bottom:0px;">Level {{ difficulty }}</h4>
 </div>
-<div class="col-xs-12 ">
-<p>{{matches}}</p>
+<div class="col-xs-12 text-left details">
+	
+	<hr>
+
+		<div class="btn-group">
+  <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Menu <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu">
+    <li><a href="#" @click.prevent="reshuffle('reset')">Restart</a></li>
+  </ul>
+</div>
+
+	<span class="label label-default"><strong>Points:</strong> {{ points }}</span> 
+	<span class="label label-default"><strong>Matches:</strong> {{ matches }}</span> 
+	<span class="label label-default"><strong>Attempts:</strong> {{ attempts }}</span>
+	
+	<hr>
+	
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+<p v-for="(cards,index) in allCards" class="card text-center" :class="{cardplay:cards.action}" @click="flip(cards,index)"><i class="fa fa-3x icon"  :class="cards.icon"></i></p>
 </div>
 <div v-if="win" class="faded"></div>
 <div  v-if="win" class="win-box">
 <div class="col-xs-12 congrats" v-if="win">
-<h1><strong>You Win!!</strong></h1>
-<button class="btn btn-success btn-lg" @click="reshuffle('levelup')">Next</button>
+<h1 style="margin-top:0px;"><strong>Congrats You won!</strong></h1>
+<h3>Continue to the next level</h3>
+<p><i class="fa fa-trophy fa-3x"></i></p>
+<button class="btn btn-success btn-lg btn-new" @click="reshuffle('levelup')">Continue</button>
 </div>
 </div>
-
 </div>
-
-
-
-
 </template>
 
 <script>
@@ -72,6 +90,11 @@ export default{
 		methods:{
 			flip(obj,index){
 
+				if(this.match.length>0){
+					if(obj.action==true){
+						return;
+					}
+				}
 				if(this.match.length==this.levelMatch){
 					this.check();
 					this.match.splice(0,2);
@@ -82,13 +105,12 @@ export default{
 				obj={id:obj.id, icon:obj.icon, action:true};
 				
 				this.allCards.splice(index,1,obj);
-				//console.log(this.allCards);
 				
 				this.match.push(obj);
 
 				if(this.match.length==this.levelMatch){
 					 this.fliptime = setTimeout( this.check,1200);
-					 //console.log(this.fliptime);
+					
 				}
 
 
@@ -120,10 +142,10 @@ export default{
 			
 			},
 			increaseDifficulty(){
-				this.cardsCount+=2;
+				this.cardsCount++;
 				this.addMoreCards();
-				if(this.difficulty==10){
-					this.cardsCount=10;
+				if(this.difficulty==20){
+					this.cardsCount=20;
 					this.addMoreCards();
 				}
 			},
@@ -157,7 +179,6 @@ export default{
 					random = Math.floor(Math.random() * length+1);
 
 					temp = this.allCards[length];
-					console.log(random+" "+this.allCards[length]+" "+length);
 					this.allCards[length] = this.allCards[random];
 					this.allCards[random] = temp;
 					this.allCards[length].action = false;
@@ -165,7 +186,7 @@ export default{
 					length--;
 
 				}
-				//console.log(this.allCards);
+				
 				return this.allCards;
 			},
 			addMoreCards(){
@@ -209,13 +230,17 @@ export default{
 </script>
 
 <style scoped>
-.card{ display:inline-block; width:100px; height:100px; border:1px solid gray;padding:10px; margin:5px;background-color: green; }
+
+.label{padding:5px 5px; font-size:85%;}
+.details{padding-bottom:30px;}
+.btn-new{border-radius: 0px;box-shadow: 2px 1px 3px 1px #d3d3d3;}
+.card{ display:inline-block; width:100px; height:100px; border:1px solid #f8f8f8;padding:10px; margin:5px;background-color: green; }
 .cardplay{ animation-name:example; animation-duration:1s;animation-fill-mode: forwards;}
 .cardplay2{  animation-name:example; animation-duration:1s;animation-fill-mode: forwards; }
 .cardplay .icon{  animation-name:icon; animation-duration:1s;animation-fill-mode: forwards; }
 .icon{ opacity:0; }
 .fa{padding:20px;color:white;}
-.cards-container{ padding-top:30px;}
+.cards-container{ padding-top:0px;padding-left:250px;padding-right:250px; padding-bottom:50px;}
 .btn-container{ padding-top:50px;}
 
 @keyframes example {
@@ -233,5 +258,27 @@ export default{
 }
 
 .faded{position:fixed;top:0;left:0;width:100%;height:100%;z-index:49;background-color:#00000087;}
-.win-box{position:fixed;top:10%;left:10%;width:80%;height:40%;z-index:50;background-color:white;border:1px solid gray; padding-top:45px;}
+.win-box{position:fixed;top:10%;left:10%;width:80%;height:55%;z-index:50;background-color:white;border:1px solid gray; padding:45px 10px 25px 10px;}
+.fa-trophy{color:#ffd312;font-size: 500%;}
+
+
+	/*col- sm*/
+	@media  (min-width: 768px)and (max-width: 991px) {
+		.cards-container{
+			padding-left:50px;padding-right:50px;
+		}
+	}
+
+	/*col-xs*/
+	@media  (max-width: 767px) {
+		.card{ display:inline-block; width:15%; height:50px; border:1px solid gray;padding:2px; margin:5px;background-color: green; }
+		.fa{padding:10px 0px 0px 0px;color:white;font-size: 170%;}
+		.cards-container{
+			width:100%;
+			padding-left:0px;padding-right:0px;
+		}
+		.fa-trophy{color:#ffd312;font-size: 500%;}
+
+		.win-box{position:fixed;top:10%;left:5%;width:90%;height:65%;z-index:50;background-color:white;border:1px solid gray; padding:45px 10px 25px 10px;}
+	}
 </style>

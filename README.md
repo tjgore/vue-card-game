@@ -1,8 +1,8 @@
-# card-matching
+# A Vuejs card matching game
 
-> a simple game to match cards with each other to win
+This vuejs app is a simple game to match cards with each other to win andmove on to te next level
 
-## Build Setup
+## Installation
 
 ``` bash
 # install dependencies
@@ -14,5 +14,3 @@ npm run dev
 # build for production with minification
 npm run build
 ```
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
