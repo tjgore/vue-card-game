@@ -1,6 +1,6 @@
 # A Vuejs card matching game
 
-This vuejs app is a simple game to match cards with each other to win andmove on to te next level
+This vuejs app is a simple game to match cards with each other to win and move on to te next level
 
 ## Installation
 
